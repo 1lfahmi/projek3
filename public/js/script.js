@@ -1,206 +1,156 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ===== NAVIGATION & SECTIONS =====
-    window.scrollToSection = function(sectionId) {
-        document.querySelectorAll('.section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection && targetSection.classList.contains('section')) {
-            targetSection.classList.add('active');
-        }
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+    /* ================= KONFIGURASI WHATSAPP ================= */
+    // Ganti dengan nomor WhatsApp Anda (format internasional tanpa +)
+    const WHATSAPP_NUMBER = '6285191163819'; // Contoh: 6281234567890
 
-    // Show katalog by default
-    setTimeout(() => {
-        const katalogSection = document.getElementById('katalog');
-        if (katalogSection) {
-            katalogSection.classList.add('active');
-        }
-    }, 100);
+    /* ================= NAVIGATION ================= */
+    window.scrollToSection = function(sectionId) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+
+        const target = document.getElementById(sectionId);
+        if (target && target.classList.contains('section')) {
+            target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    // Default tampil katalog
+    const katalog = document.getElementById('katalog');
+    if (katalog) katalog.classList.add('active');
 
 
+    /* ================= MODAL ELEMENTS ================= */
+    const formModal   = document.getElementById('formModal');
+    const detailModal = document.getElementById('detailModal');
+    const userForm    = document.getElementById('userForm');
+    const mobilIdInput = document.getElementById('mobilId');
+    const mobilNamaInput = document.getElementById('mobilNama');
+    const mobilHargaInput = document.getElementById('mobilHarga');
 
-    // ===== MODAL ELEMENTS =====
-    const formModal = document.getElementById('formModal');
-    const detailModal = document.getElementById('detailModal');
-    const closeBtn = document.querySelector('.close');
-    const closeDetail = document.querySelector('.close-detail');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const userForm = document.getElementById('userForm');
-    const mobilIdInput = document.getElementById('mobilId');
+    const closeFormBtn   = document.querySelector('.close');
+    const closeDetailBtn = document.querySelector('.close-detail');
+    const cancelBtn      = document.getElementById('cancelBtn');
 
-    const detailNama = document.getElementById('detailNama');
-    const detailMerek = document.getElementById('detailMerek');
-    const detailHarga = document.getElementById('detailHarga');
-    const detailMesin = document.getElementById('detailMesin');
-    const detailTransmisi = document.getElementById('detailTransmisi');
-    const detailBahan = document.getElementById('detailBahan');
-    const detailCc = document.getElementById('detailCc');
-    const detailWarna = document.getElementById('detailWarna');
-    const detailTahun = document.getElementById('detailTahun');
-    const detailPenggerak = document.getElementById('detailPenggerak');
+    const detailFields = {
+        nama: document.getElementById('detailNama'),
+        merek: document.getElementById('detailMerek'),
+        harga: document.getElementById('detailHarga'),
+        mesin: document.getElementById('detailMesin'),
+        transmisi: document.getElementById('detailTransmisi'),
+        bahanbakar: document.getElementById('detailBahan'),
+        cc: document.getElementById('detailCc'),
+        warna: document.getElementById('detailWarna'),
+        tahun: document.getElementById('detailTahun'),
+        penggerak: document.getElementById('detailPenggerak')
+    };
 
-    let mobilData = {};
+    const openModal = (modal) => {
+        if (!modal) return;
+        modal.classList.add('show');
+        modal.style.display = 'flex';
+    };
 
-    // ===== OPEN MODAL BELI =====
-    const btnBeliElements = document.querySelectorAll('.btn-beli');
-    btnBeliElements.forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            mobilData = {
-                id: this.dataset.id,
-                nama: this.dataset.nama,
-                harga: this.dataset.harga
-            };
+    const closeModal = (modal) => {
+        if (!modal) return;
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    };
 
-            if (mobilIdInput) mobilIdInput.value = mobilData.id;
-            if (formModal) {
-                formModal.classList.add('show');
-                formModal.style.display = 'flex';
-            }
-        });
-    });
 
-    // ===== CLOSE MODAL BELI =====
-    if (closeBtn) {
-        closeBtn.onclick = function(e) {
-            e.preventDefault();
-            if (formModal) {
-                formModal.classList.remove('show');
-                formModal.style.display = 'none';
-            }
-        };
-    }
-    
-    if (cancelBtn) {
-        cancelBtn.onclick = function(e) {
-            e.preventDefault();
-            if (formModal) {
-                formModal.classList.remove('show');
-                formModal.style.display = 'none';
-            }
-        };
-    }
+    /* ================= OPEN MODAL BELI ================= */
+    document.querySelectorAll('.btn-beli').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-    // ===== OPEN MODAL DETAIL =====
-    const btnDetailElements = document.querySelectorAll('.btn-detail');
-    btnDetailElements.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            if (detailNama) detailNama.innerText = this.dataset.nama;
-            if (detailMerek) detailMerek.innerText = this.dataset.merek;
-            if (detailHarga) detailHarga.innerText = this.dataset.harga;
-            if (detailMesin) detailMesin.innerText = this.dataset.mesin;
-            if (detailTransmisi) detailTransmisi.innerText = this.dataset.transmisi;
-            if (detailBahan) detailBahan.innerText = this.dataset.bahanbakar;
-            if (detailCc) detailCc.innerText = this.dataset.cc;
-            if (detailWarna) detailWarna.innerText = this.dataset.warna;
-            if (detailTahun) detailTahun.innerText = this.dataset.tahun;
-            if (detailPenggerak) detailPenggerak.innerText = this.dataset.penggerak;
+            // Simpan data mobil yang dipilih
+            if (mobilIdInput) mobilIdInput.value = this.dataset.id;
+            if (mobilNamaInput) mobilNamaInput.value = this.dataset.nama;
+            if (mobilHargaInput) mobilHargaInput.value = this.dataset.harga;
+            
+            openModal(formModal);
+        });
+    });
 
-            if (detailModal) {
-                detailModal.classList.add('show');
-                detailModal.style.display = 'flex';
-            }
-        });
-    });
 
-    // ===== CLOSE MODAL DETAIL =====
-    // Gunakan variabel di luar scope agar tidak bisa di-reset oleh klik baru
-let sedanganMengirim = false;
+    /* ================= OPEN MODAL DETAIL ================= */
+    document.querySelectorAll('.btn-detail').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-document.getElementById('userForm').onsubmit = function(e) {
-    e.preventDefault();
+            Object.keys(detailFields).forEach(key => {
+                if (detailFields[key]) {
+                    detailFields[key].innerText = this.dataset[key] || '-';
+                }
+            });
 
-    // 1. Jika sedang mengirim, blokir total
-    if (sedanganMengirim) return false;
+            openModal(detailModal);
+        });
+    });
 
-    const btn = document.getElementById('submitBtn');
-    const formElement = document.getElementById('userForm');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // DEFALUT FORM DATA (Ini yang tadi kurang di kodemu)
-    const formData = new FormData(formElement);
+    /* ================= CLOSE MODAL HANDLERS ================= */
+    if (closeFormBtn) {
+        closeFormBtn.onclick = function(e) {
+            e.preventDefault();
+            closeModal(formModal);
+        };
+    }
 
-    // 2. Kunci status & visual tombol
-    sedanganMengirim = true;
-    btn.disabled = true;
-    btn.innerText = "Proses...";
+    if (closeDetailBtn) {
+        closeDetailBtn.onclick = function(e) {
+            e.preventDefault();
+            closeModal(detailModal);
+        };
+    }
 
-    fetch('/beli/store', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken,
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) throw response;
-        return response.json();
-    })
-    .then(data => {
-        // Tampilkan pesan sukses dari Controller
-        alert(data.message);
-    
-        // PINDAH KE WA OTOMATIS
-        if (data.target_url) {
-            window.location.href = data.target_url; 
-        } else {
-            // Jika target_url tidak ada, kembalikan tombol ke semula
-            sedanganMengirim = false;
-            btn.disabled = false;
-            btn.innerText = "KIRIM PEMBELIAN";
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Terjadi kesalahan, coba lagi.");
-        sedanganMengirim = false;
-        btn.disabled = false;
-        btn.innerText = "KIRIM PEMBELIAN";
-    });
+    if (cancelBtn) {
+        cancelBtn.onclick = function(e) {
+            e.preventDefault();
+            closeModal(formModal);
+        };
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function (e) {
+        if (formModal && e.target === formModal) {
+            closeModal(formModal);
+        }
+        if (detailModal && e.target === detailModal) {
+            closeModal(detailModal);
+        }
+    };
+
+
+   /* ================= KIRIM KE LARAVEL DULU ================= */
+if (userForm) {
+    userForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(userForm);
+
+        fetch("/beli-mobil", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            window.open(data.target_url, "_blank"); // buka WA dari Laravel
+            userForm.reset();
+            closeModal(formModal);
+        })
+        .catch(err => {
+            console.error(err);
+            alert("❌ Gagal kirim data ke server");
+        });
+    });
 }
 
-});
 
-
-document.getElementById('pembelianForm').addEventListener('submit', function(e) {
-    // 1. Ambil data dari form berdasarkan atribut 'name'
-    const nama = this.querySelector('input[name="nama"]').value;
-    const email = this.querySelector('input[name="email"]').value;
-    const telepon = this.querySelector('input[name="telepon"]').value;
-    const kota = this.querySelector('input[name="kota"]').value;
-    const alamat = this.querySelector('textarea[name="alamat"]').value;
-
-    // 2. Atur Nomor WhatsApp tujuan (gunakan kode negara, misal 62)
-    const noHP = "6285191163819"; 
-
-    // 3. Susun format pesan WhatsApp
-    const pesan = `Halo Admin AutoShow!%0A` +
-                  `Ada pesanan baru nih:%0A%0A` +
-                  `*Nama:* ${nama}%0A` +
-                  `*Email:* ${email}%0A` +
-                  `*Telepon:* ${telepon}%0A` +
-                  `*Kota:* ${kota}%0A` +
-                  `*Alamat:* ${alamat}`;
-
-    // 4. URL WhatsApp
-    const urlWA = `https://wa.me/${noHP}?text=${pesan}`;
-
-    // 5. Buka WhatsApp di tab baru
-    window.open(urlWA, '_blank');
-
-    // Setelah tab WA terbuka, browser akan otomatis melanjutkan 
-    // proses submit form ke route 'pembelian.store' di Laravel.
-});
-
-
+});  
