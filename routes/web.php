@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManageAdminController;
 use App\Http\Controllers\MobilController;
+use App\Http\Controllers\DashboardController;
 
 
 // --- HALAMAN USER ---
