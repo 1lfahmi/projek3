@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ManageAdminController;
 use App\Http\Controllers\MobilController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LoginController;
 
 
 // --- HALAMAN USER ---
